@@ -1,0 +1,19 @@
+# MacOS
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# ctags
+.ctags
+
+# Python venv
+.venv/
+
+# Python pyenv
+.python-version
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/

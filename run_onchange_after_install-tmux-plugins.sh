@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+# dot_tmux.conf hash: {{ include "dot_tmux.conf" | sha256sum }}
+
+[ -d ~/.tmux/plugins/tpm ] || \
+	git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+
+TMUX= tmux new-session -s "$(uuidgen)" ~/.tmux/plugins/tpm/bin/install_plugins
+TMUX= tmux new-session -s "$(uuidgen)" ~/.tmux/plugins/tpm/bin/update_plugins all
+TMUX= tmux new-session -s "$(uuidgen)" ~/.tmux/plugins/tpm/bin/clean_plugins

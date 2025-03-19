@@ -1,0 +1,125 @@
+[user]
+    name = {{ .git_name | quote }}
+    email = {{ .git_email | quote }}
+    signingkey = {{ .git_signing_key | quote }}
+
+[commit]
+{{- if ne .git_signing_key "" }}
+    gpgsign = true
+{{- else }}
+    gpgsign = false
+{{- end }}
+
+[pull]
+    rebase = false
+
+[init]
+    defaultBranch = master
+
+[core]
+    excludesfile = ~/.gitignore
+	pager = diff-so-fancy | less --tabs=4 -RFX
+
+[interactive]
+	diffFilter = diff-so-fancy --patch
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = 11
+	frag = magenta bold
+	func = 146 bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+
+[merge]
+    conflictstyle = diff3
+
+[diff]
+    colorMoved = default
+
+[alias]
+
+    # ~~~ Status checking
+
+    # View the current working tree status using the short format
+    s = status -s
+
+    # View abbreviated SHA, description, and history graph of the latest 20 commits
+    l = log --pretty=oneline -n 20 --graph --abbrev-commit
+
+    # List commit in fancy way
+    ll = log --graph --pretty=format:'commit: %C(bold red)%h%Creset %C(red)<%H>%Creset %C(bold magenta)%d %Creset%ndate: %C(bold yellow)%cd %Creset%C(yellow)%cr%Creset%nauthor: %C(bold blue)%an%Creset %C(blue)<%ae>%Creset%n%C(cyan)%s%n%Creset'
+
+    # Show the most recent commit
+    lc = log -1 HEAD --stat --show-signature
+
+    # Show signatures in a graph
+    ls = log --show-signature --graph
+
+    # List all aliases in alpha order
+    la = "!f() { git config --global -l | grep alias | sort; }; f"
+
+
+    # ~~~ Adds
+    a = add
+    aa = add --all
+    ap = add --all -p
+
+
+    # Diffs
+
+    d = diff
+
+    # `git di $number` shows the diff between the state `$number` revisions ago and the current state
+    di = !"d() { git diff --patch-with-stat HEAD~${1:-0}; }; git diff-index --quiet HEAD -- || clear; d"
+
+
+    # ~~~ Commits
+    c = commit
+
+    # Checkouts
+    k = checkout
+
+    # Switch to a branch, creating it if necessary
+    o = "!f() { git checkout -b \"$1\" 2> /dev/null || git checkout \"$1\"; }; f"
+
+    # Switch to default branch
+    og = "!f() { git checkout $(basename .git/refs/remotes/origin/*); }; f"
+
+    # Create new branch based off of default from origin
+    nb = "!f() { git fetch && git checkout --no-track -b $1 \"$(git remote show origin | grep 'HEAD branch' | sed 's@.*: @origin/@')\"; }; f"
+
+
+    # ~~~ Resets
+    r = reset
+    undo = reset --soft HEAD~1
+
+
+    # ~~~ Deletes
+    dm = branch -D
+
+
+    # ~~~ Pushs
+    u = push
+    fp = push --force-with-lease
+
+
+    # ~~~ Pulls
+    m = pull
+    f = fetch
+
+    # ~~~ Rebases
+    rb = rebase -if
+
+    # Resign commits
+    resign = rebase --exec 'git commit --amend --no-edit -n -S' -i
+
+    # Reset all file permission changes
+    permission-reset = "!f() { git diff -p -R --no-ext-diff --no-color | grep -E '^(diff|(old|new) mode)' --color=never | git apply; }; f"

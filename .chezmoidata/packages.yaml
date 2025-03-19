@@ -1,0 +1,16 @@
+---
+packages:
+  linux:
+    - fzf
+    - git
+    - ripgrep
+    - tmux
+    - zsh
+  linux_arch: &linux_arch_packages
+    - base-devel
+    - diff-so-fancy
+    - eza
+  linux_manjaro: *linux_arch_packages
+  linux_debian: &linux_debian_packages
+    - uuid-runtime
+  linux_ubuntu: *linux_debian_packages

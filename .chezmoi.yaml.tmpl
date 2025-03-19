@@ -1,0 +1,20 @@
+{{- $merge_tool := promptString "merge_tool" "vimdiff" -}}
+{{- $osid := .chezmoi.os -}}
+{{- if hasKey .chezmoi.osRelease "id" -}}
+{{-   $osid = printf "%s_%s" .chezmoi.os .chezmoi.osRelease.id -}}
+{{- end -}}
+{{- $git_name := promptString "git_name" -}}
+{{- $git_email := promptString "git_email" -}}
+{{- $git_signing_key := promptString "git_signing_key" -}}
+
+---
+# Configuration
+merge:
+  command: {{ $merge_tool | quote }}
+
+# Template data
+data:
+  osid: {{ $osid | quote }}
+  git_name: {{ $git_name | quote }}
+  git_email: {{ $git_email | quote }}
+  git_signing_key: {{ $git_signing_key | quote }}
