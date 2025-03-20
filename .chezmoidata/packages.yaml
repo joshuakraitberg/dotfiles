@@ -1,6 +1,7 @@
 ---
 packages:
   linux:
+    - fish
     - fzf
     - git
     - ripgrep
@@ -10,7 +11,9 @@ packages:
     - base-devel
     - diff-so-fancy
     - eza
+    - fd
   linux_manjaro: *linux_arch_packages
   linux_debian: &linux_debian_packages
+    - fd-find
     - uuid-runtime
   linux_ubuntu: *linux_debian_packages
