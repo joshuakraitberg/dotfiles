@@ -12,6 +12,8 @@ packages:
     - diff-so-fancy
     - eza
     - fd
+    - prettier
+    - pre-commit
   linux_manjaro: *linux_arch_packages
   linux_debian: &linux_debian_packages
     - fd-find

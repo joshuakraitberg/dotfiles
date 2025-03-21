@@ -40,6 +40,13 @@ function tst
     end
 end
 
+# kubernetes
+if which kubecolor &>/dev/null
+    function kubectl
+        kubecolor $argv
+    end
+end
+
 # chezmoi
 alias czc='cd ~/.local/share/chezmoi'
 alias cza='chezmoi apply -v'

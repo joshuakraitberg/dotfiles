@@ -13,9 +13,10 @@ DOTFILES_REPO="github.com/joshuakraitberg/dotfiles"
 # Install required packages
 if which pacman; then
   sudo pacman -S --noconfirm chezmoi
+elif which snap; then
+  sudo snap install chezmoi --classic
 elif which apt-get; then
-  (cd ~ && sh -c "$(curl -fsLS get.chezmoi.io)")
-  PATH="~/bin:$PATH"
+  (cd /tmp && sh -c "$(curl -fsLS get.chezmoi.io)" && sudo mv bin/chezmoi /usr/local/bin/)
 else
   echo 'Unknown package manager, cannot install chezmoi'
   exit 1

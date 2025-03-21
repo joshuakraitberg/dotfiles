@@ -1,0 +1,17 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # Sanity
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      # File checks
+      - id: check-json
+      - id: check-toml
+      - id: check-xml
+      - id: check-yaml
+      # Auto-formatting
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+      # Security
+      - id: detect-private-key
