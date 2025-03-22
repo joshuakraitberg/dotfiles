@@ -1,0 +1,59 @@
+[[keyboard.bindings]]
+action = "IncreaseFontSize"
+key = "Equals"
+mods = "Control"
+
+[[keyboard.bindings]]
+action = "DecreaseFontSize"
+key = "Minus"
+mods = "Control"
+
+[terminal]
+
+[colors]
+# author = "Joshua Kraitberg"
+# name = "Custom"
+
+[colors.bright]
+black = "#5c5855"
+blue = "#01a0e4"
+cyan = "#0066ff"
+green = "#a2e655"
+magenta = "#cc00ff"
+red = "#db2d20"
+white = "#ffffff"
+yellow = "#ffb454"
+
+[colors.cursor]
+cursor = "#a5a2a2"
+text = "#090300"
+
+[colors.normal]
+black = "#3b3b3b"
+blue = "#01a0e4"
+cyan = "#0066ff"
+green = "#19cb00"
+magenta = "#ad2bee"
+red = "#db2d20"
+white = "#fafafa"
+yellow = "#f9af4f"
+
+[colors.primary]
+background = "#090300"
+foreground = "#d5d5d5"
+
+[font]
+size = 10.0
+
+[font.normal]
+family = "MonaspiceNe NFM"
+
+[terminal.shell]
+args = ["--login"]
+program = "/bin/fish"
+
+[window.dimensions]
+columns = 96
+lines = 32
+
+[keyboard]
