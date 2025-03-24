@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+
+# packages hash: {{ include ".chezmoidata/packages.yaml" | sha256sum }}
+
+echo 'Detected OS: {{ .osid | quote }}'
+
+{{- if eq .osid "linux_arch" }}
+sudo pacman -Syy --noconfirm --needed {{- range $package := .linux_arch.packages }} {{ $package | quote }}{{- end }}
+
+{{- else if eq .osid "linux_manjaro" }}
+sudo pacman -Syy --noconfirm --needed {{- range $package := .linux_manjaro.packages }} {{ $package | quote }}{{- end }}
+
+{{- else if eq .osid "linux_debian" }}
+sudo apt-get update
+sudo apt-get install -y {{- range $package := .linux_debian.packages }} {{ $package | quote }}{{- end }}
+
+{{- else if eq .osid "linux_ubuntu" }}
+sudo apt-get update
+sudo apt-get install -y {{- range $package := .linux_ubuntu.packages }} {{ $package | quote }}{{- end }}
+
+{{- else }}
+echo "Unsupported osid: {{ .osid }}"
+exit 1
+{{- end }}

@@ -1,21 +1,34 @@
 ---
-packages:
-  linux:
-    - fish
-    - fzf
-    - git
-    - ripgrep
-    - tmux
-    - zsh
-  linux_arch: &linux_arch_packages
+linux_arch:
+  packages: &linux_arch_packages
+    - atuin
     - base-devel
     - diff-so-fancy
     - eza
     - fd
+    - fish
+    - fzf
+    - git
     - prettier
     - pre-commit
-  linux_manjaro: *linux_arch_packages
-  linux_debian: &linux_debian_packages
+    - ripgrep
+    - tmux
+    - yay
+    - zsh
+
+linux_manjaro:
+  packages: *linux_arch_packages
+
+linux_debian:
+  packages: &linux_debian_packages
+    - fish
     - fd-find
+    - fzf
+    - git
+    - ripgrep
+    - tmux
     - uuid-runtime
-  linux_ubuntu: *linux_debian_packages
+    - zsh
+
+linux_ubuntu:
+  packages: *linux_debian_packages
