@@ -10,7 +10,18 @@
 ---
 # Configuration
 merge:
+{{- if eq $merge_tool "code" "vscode" }}
+  command: "code"
+  args:
+  - "--wait"
+  - "--diff"
+{{- else if eq $merge_tool "nvim" "nvimdiff" }}
+  command: "nvim"
+  args:
+  - "-d"
+{{- else }}
   command: {{ $merge_tool | quote }}
+{{- end }}
 
 # Template data
 data:
