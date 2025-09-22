@@ -16,6 +16,7 @@ linux_arch:
     - ripgrep
     - tmux
     - uv
+    - zoxide
 
 linux_manjaro:
   packages:

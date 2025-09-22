@@ -9,6 +9,9 @@ if status is-interactive
     # Activate atuin
     atuin init fish | source
 
+    # Activate zoxide
+    zoxide init fish | source
+
     # Reload aliases
     source ~/.config/fish/conf.d/aliases.fish
 end
