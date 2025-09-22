@@ -46,14 +46,14 @@ foreground = "#d5d5d5"
 size = 10.0
 
 [font.normal]
-family = "MonaspiceNe NFM"
+family = "Monaspace Neon NF"
 
 [terminal.shell]
 args = ["--login"]
 program = "/bin/fish"
 
 [window.dimensions]
-columns = 96
-lines = 32
+columns = 152
+lines = 40
 
 [keyboard]

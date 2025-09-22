@@ -4,7 +4,7 @@
 
 -- Don't use relative line numbering
 vim.opt.number = true
-vim.opt.relativenumber = false
+-- vim.opt.relativenumber = false
 
 -- Don't do weird stuff with quotes and markdown
 vim.opt.conceallevel = 0

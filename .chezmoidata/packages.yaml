@@ -9,15 +9,18 @@ linux_arch:
     - fish
     - fzf
     - git
+    - less
+    - npm
     - prettier
     - pre-commit
     - ripgrep
     - tmux
-    - yay
-    - zsh
+    - uv
 
 linux_manjaro:
-  packages: *linux_arch_packages
+  packages:
+    *linux_arch_packages
+    # - yay
 
 linux_debian:
   packages: &linux_debian_packages
