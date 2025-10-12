@@ -16,6 +16,7 @@ linux_arch:
     - ripgrep
     - tmux
     - uv
+    - wezterm
     - zoxide
 
 linux_manjaro:
