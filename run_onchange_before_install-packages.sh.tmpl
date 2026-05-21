@@ -2,23 +2,124 @@
 
 # packages hash: {{ include ".chezmoidata/packages.yaml" | sha256sum }}
 
-echo 'Detected OS: {{ .osid | quote }}'
+set -e
+
+{{ template "logging.sh" }}
+
+log_info "Detected OS: {{ .osid | quote }}"
 
 {{- if eq .osid "linux_arch" }}
-sudo pacman -Syy --noconfirm --needed {{- range $package := .linux_arch.packages }} {{ $package | quote }}{{- end }}
+log_info "Installing packages for Arch Linux..."
+
+# Check if pacman is available
+if ! command -v pacman >/dev/null 2>&1; then
+  log_error "pacman not found, but osid is linux_arch"
+  exit 1
+fi
+
+# Update package databases
+log_info "Updating package databases..."
+if sudo pacman -Syy --noconfirm; then
+  log_info "Package databases updated"
+else
+  log_error "Failed to update package databases"
+  exit 1
+fi
+
+# Install packages
+log_info "Installing packages..."
+if sudo pacman -S --noconfirm --needed {{- range $package := .linux_arch.packages }} {{ $package | quote }}{{- end }}; then
+  log_info "All packages installed successfully"
+else
+  log_error "Failed to install some packages"
+  exit 1
+fi
 
 {{- else if eq .osid "linux_manjaro" }}
-sudo pacman -Syy --noconfirm --needed {{- range $package := .linux_manjaro.packages }} {{ $package | quote }}{{- end }}
+log_info "Installing packages for Manjaro Linux..."
+
+# Check if pacman is available
+if ! command -v pacman >/dev/null 2>&1; then
+  log_error "pacman not found, but osid is linux_manjaro"
+  exit 1
+fi
+
+# Update package databases
+log_info "Updating package databases..."
+if sudo pacman -Syy --noconfirm; then
+  log_info "Package databases updated"
+else
+  log_error "Failed to update package databases"
+  exit 1
+fi
+
+# Install packages
+log_info "Installing packages..."
+if sudo pacman -S --noconfirm --needed {{- range $package := .linux_manjaro.packages }} {{ $package | quote }}{{- end }}; then
+  log_info "All packages installed successfully"
+else
+  log_error "Failed to install some packages"
+  exit 1
+fi
 
 {{- else if eq .osid "linux_debian" }}
-sudo apt-get update
-sudo apt-get install -y {{- range $package := .linux_debian.packages }} {{ $package | quote }}{{- end }}
+log_info "Installing packages for Debian..."
+
+# Check if apt-get is available
+if ! command -v apt-get >/dev/null 2>&1; then
+  log_error "apt-get not found, but osid is linux_debian"
+  exit 1
+fi
+
+# Update package lists
+log_info "Updating package lists..."
+if sudo apt-get update; then
+  log_info "Package lists updated"
+else
+  log_error "Failed to update package lists"
+  exit 1
+fi
+
+# Install packages
+log_info "Installing packages..."
+if sudo apt-get install -y {{- range $package := .linux_debian.packages }} {{ $package | quote }}{{- end }}; then
+  log_info "All packages installed successfully"
+else
+  log_error "Failed to install some packages"
+  exit 1
+fi
 
 {{- else if eq .osid "linux_ubuntu" }}
-sudo apt-get update
-sudo apt-get install -y {{- range $package := .linux_ubuntu.packages }} {{ $package | quote }}{{- end }}
+log_info "Installing packages for Ubuntu..."
+
+# Check if apt-get is available
+if ! command -v apt-get >/dev/null 2>&1; then
+  log_error "apt-get not found, but osid is linux_ubuntu"
+  exit 1
+fi
+
+# Update package lists
+log_info "Updating package lists..."
+if sudo apt-get update; then
+  log_info "Package lists updated"
+else
+  log_error "Failed to update package lists"
+  exit 1
+fi
+
+# Install packages
+log_info "Installing packages..."
+if sudo apt-get install -y {{- range $package := .linux_ubuntu.packages }} {{ $package | quote }}{{- end }}; then
+  log_info "All packages installed successfully"
+else
+  log_error "Failed to install some packages"
+  exit 1
+fi
 
 {{- else }}
-echo "Unsupported osid: {{ .osid }}"
+log_error "Unsupported osid: {{ .osid }}"
+log_error "Supported: linux_arch, linux_manjaro, linux_debian, linux_ubuntu"
 exit 1
 {{- end }}
+
+log_info "Package installation completed successfully"

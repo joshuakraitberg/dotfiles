@@ -40,6 +40,14 @@ function tst
     end
 end
 
+function tsnt
+    if command -v tmux >/dev/null 2>&1 && status is-interactive && not string match -q "*screen*" "$TERM" && not string match -q "*tmux*" "$TERM" && [ -z "$TMUX" ]
+        if not tmux has-session -t main 2>/dev/null
+            exec tmux new-session -s main
+        end
+    end
+end
+
 # kubernetes
 if which kubecolor &>/dev/null
     function kubectl

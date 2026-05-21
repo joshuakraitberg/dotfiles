@@ -3,10 +3,12 @@ linux_arch:
   packages: &linux_arch_packages
     - atuin
     - base-devel
+    - bun
     - diff-so-fancy
     - eza
     - fd
     - fish
+    - fisher
     - fzf
     - git
     - less
@@ -14,6 +16,7 @@ linux_arch:
     - prettier
     - pre-commit
     - ripgrep
+    - shfmt
     - tmux
     - uv
     - wezterm

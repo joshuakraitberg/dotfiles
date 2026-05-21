@@ -49,7 +49,7 @@ size = 10.0
 family = "Monaspace Neon NF"
 
 [terminal.shell]
-args = ["--login"]
+args = ["--login", "-C", "tsnt"]
 program = "/bin/fish"
 
 [window.dimensions]

@@ -1,10 +1,27 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # private_dot_tmux.conf hash: {{ include "private_dot_tmux.conf" | sha256sum }}
 
+set -e
+
+# Install TPM if needed
 [ -d ~/.tmux/plugins/tpm ] ||
   git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
-TMUX= tmux new-session -s "$(uuidgen)" ~/.tmux/plugins/tpm/bin/install_plugins
-TMUX= tmux new-session -s "$(uuidgen)" ~/.tmux/plugins/tpm/bin/update_plugins all
-TMUX= tmux new-session -s "$(uuidgen)" ~/.tmux/plugins/tpm/bin/clean_plugins
+if [ -n "$TMUX" ]; then
+  ~/.tmux/plugins/tpm/bin/install_plugins
+  ~/.tmux/plugins/tpm/bin/update_plugins all
+  ~/.tmux/plugins/tpm/bin/clean_plugins
+else
+  gen_uuid() {
+    if command -v uuidgen >/dev/null 2>&1; then
+      uuidgen
+    else
+      echo "tmux-$(date +%s)-$RANDOM"
+    fi
+  }
+
+  TMUX='' tmux new-session -d -s "$(gen_uuid)" ~/.tmux/plugins/tpm/bin/install_plugins
+  TMUX='' tmux new-session -d -s "$(gen_uuid)" ~/.tmux/plugins/tpm/bin/update_plugins all
+  TMUX='' tmux new-session -d -s "$(gen_uuid)" ~/.tmux/plugins/tpm/bin/clean_plugins
+fi
