@@ -21,7 +21,10 @@ else
     fi
   }
 
-  TMUX='' tmux new-session -d -s "$(gen_uuid)" ~/.tmux/plugins/tpm/bin/install_plugins
-  TMUX='' tmux new-session -d -s "$(gen_uuid)" ~/.tmux/plugins/tpm/bin/update_plugins all
-  TMUX='' tmux new-session -d -s "$(gen_uuid)" ~/.tmux/plugins/tpm/bin/clean_plugins
+  session="$(gen_uuid)"
+  TMUX='' tmux new-session -d -s "$session"
+  TMUX='' tmux send-keys -t "$session" \
+    "$HOME/.tmux/plugins/tpm/bin/install_plugins && $HOME/.tmux/plugins/tpm/bin/update_plugins all && $HOME/.tmux/plugins/tpm/bin/clean_plugins; tmux wait-for -S $session" Enter
+  TMUX='' tmux wait-for "$session"
+  TMUX='' tmux kill-session -t "$session"
 fi

@@ -29,7 +29,7 @@ alias fgrep='fgrep --color=auto'
 # vim
 alias v='nvim'
 alias vim='nvim'
-alias svim="sudo -E $(which nvim) "
+alias svim='sudo -E $(which nvim) '
 
 # tmux
 alias bye='tmux detach'

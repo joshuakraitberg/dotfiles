@@ -1,4 +1,6 @@
 README.md
+Justfile
+tests/
 .local/share/fonts/m/LICENSE
 bootstrap.sh
 todo/

@@ -1,6 +1,7 @@
 ---
 linux_arch:
   packages: &linux_arch_packages
+    - alacritty
     - atuin
     - base-devel
     - bun
@@ -12,6 +13,7 @@ linux_arch:
     - fzf
     - git
     - less
+    - neovim
     - npm
     - prettier
     - pre-commit
