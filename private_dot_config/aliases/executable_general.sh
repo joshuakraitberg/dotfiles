@@ -18,7 +18,7 @@ alias zz="vim ~/.zshrc"
 alias zp="vim ~/.zprofile"
 alias rr="source ~/.zprofile"
 alias pg='ps -ef | grep'
-alias svim='sudo -E $(which nvim) '
+alias svim='sudo -E XDG_CACHE_HOME=/root/.cache XDG_STATE_HOME=/root/.local/state XDG_DATA_HOME=/root/.local/share $(which nvim)'
 alias mine='chown $USER:$USER'
 alias mkroot='chown root:root'
 alias nkey='ssh-keygen -t ed25519 -a 200 -C "${USER}@${HOST}"'

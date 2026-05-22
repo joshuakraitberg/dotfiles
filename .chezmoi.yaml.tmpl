@@ -1,11 +1,19 @@
-{{- $merge_tool := promptString "merge_tool" "vimdiff" -}}
+{{- $d := .chezmoi.config.data -}}
+{{- $merge_tool := "" -}}
+{{- if index .chezmoi.config "merge" -}}
+{{-   $merge_tool = .chezmoi.config.merge.command -}}
+{{- else -}}
+{{-   $merge_tool = promptString "merge_tool" "vimdiff" -}}
+{{- end -}}
+{{- $waylandSocket := printf "/run/user/%d/wayland-0" .chezmoi.uid -}}
+{{- $graphical := or (stat $waylandSocket) (stat "/tmp/.X11-unix/X0") | not | not -}}
 {{- $osid := .chezmoi.os -}}
 {{- if hasKey .chezmoi.osRelease "id" -}}
 {{-   $osid = printf "%s_%s" .chezmoi.os .chezmoi.osRelease.id -}}
 {{- end -}}
-{{- $git_name := promptString "git_name" -}}
-{{- $git_email := promptString "git_email" -}}
-{{- $git_signing_key := promptString "git_signing_key" -}}
+{{- $git_name := promptStringOnce $d "git_name" "Git name" -}}
+{{- $git_email := promptStringOnce $d "git_email" "Git email" -}}
+{{- $git_signing_key := promptStringOnce $d "git_signing_key" "Git signing key" "" -}}
 
 ---
 # Configuration
@@ -26,6 +34,7 @@ merge:
 # Template data
 data:
   osid: {{ $osid | quote }}
+  graphical: {{ $graphical }}
   git_name: {{ $git_name | quote }}
   git_email: {{ $git_email | quote }}
   git_signing_key: {{ $git_signing_key | quote }}

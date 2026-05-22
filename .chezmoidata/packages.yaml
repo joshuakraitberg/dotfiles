@@ -1,44 +1,64 @@
 ---
 linux_arch:
-  packages: &linux_arch_packages
-    - alacritty
-    - atuin
-    - base-devel
-    - bun
-    - diff-so-fancy
-    - eza
-    - fd
-    - fish
-    - fisher
-    - fzf
-    - git
-    - less
-    - neovim
-    - npm
-    - prettier
-    - pre-commit
-    - ripgrep
-    - shfmt
-    - tmux
-    - uv
-    - wezterm
-    - zoxide
-
-linux_manjaro:
-  packages:
-    *linux_arch_packages
-    # - yay
+  all:
+    packages:
+      - atuin
+      - base-devel
+      - bun
+      - diff-so-fancy
+      - eza
+      - fd
+      - fish
+      - fisher
+      - fzf
+      - git
+      - jq
+      - just
+      - less
+      - neovim
+      - npm
+      - pre-commit
+      - prettier
+      - ripgrep
+      - shfmt
+      - tmux
+      - uv
+      - xh
+      - yq
+      - zoxide
+    aur: []
+  graphical:
+    packages:
+      - alacritty
+    aur:
+      - brave-bin
 
 linux_debian:
-  packages: &linux_debian_packages
-    - fish
-    - fd-find
-    - fzf
-    - git
-    - ripgrep
-    - tmux
-    - uuid-runtime
-    - zsh
+  all:
+    packages:
+      - fish
+      - fd-find
+      - fzf
+      - git
+      - ripgrep
+      - tmux
+      - uuid-runtime
+      - zsh
+  graphical:
+    packages: []
 
 linux_ubuntu:
-  packages: *linux_debian_packages
+  all:
+    packages:
+      - fish
+      - fd-find
+      - fzf
+      - git
+      - ripgrep
+      - tmux
+      - uuid-runtime
+      - zsh
+    snap: []
+  graphical:
+    packages: []
+    snap: []

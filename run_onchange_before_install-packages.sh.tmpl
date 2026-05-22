@@ -1,125 +1,81 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # packages hash: {{ include ".chezmoidata/packages.yaml" | sha256sum }}
 
-set -e
+{{- $osid := .osid }}
+{{- $pkgs := list }}
+{{- $aur := list }}
+{{- $snaps := list }}
+
+{{- if eq $osid "linux_arch" "linux_cachyos" }}
+{{-   $pkgs = .linux_arch.all.packages }}
+{{-   $aur = .linux_arch.all.aur }}
+{{-   if .graphical }}
+{{-     $pkgs = concat $pkgs .linux_arch.graphical.packages }}
+{{-     $aur = concat $aur .linux_arch.graphical.aur }}
+{{-   end }}
+{{- else if eq $osid "linux_debian" }}
+{{-   $pkgs = .linux_debian.all.packages }}
+{{-   if .graphical }}
+{{-     $pkgs = concat $pkgs .linux_debian.graphical.packages }}
+{{-   end }}
+{{- else if eq $osid "linux_ubuntu" }}
+{{-   $pkgs = .linux_ubuntu.all.packages }}
+{{-   $snaps = .linux_ubuntu.all.snap }}
+{{-   if .graphical }}
+{{-     $pkgs = concat $pkgs .linux_ubuntu.graphical.packages }}
+{{-     $snaps = concat $snaps .linux_ubuntu.graphical.snap }}
+{{-   end }}
+{{- end }}
 
 {{ template "logging.sh" }}
 
-log_info "Detected OS: {{ .osid | quote }}"
+install_pacman() {
+  sudo pacman -Syy --noconfirm || die "Failed to update package databases"
+  sudo pacman -S --noconfirm --needed "$@" || die "Failed to install packages"
+}
 
-{{- if eq .osid "linux_arch" }}
-log_info "Installing packages for Arch Linux..."
+install_aur() {
+  paru -S --noconfirm --needed --sudoloop "$@" || die "Failed to install AUR packages"
+}
 
-# Check if pacman is available
-if ! command -v pacman >/dev/null 2>&1; then
-  log_error "pacman not found, but osid is linux_arch"
-  exit 1
-fi
+install_apt() {
+  sudo apt-get update || die "Failed to update package lists"
+  sudo apt-get install -y "$@" || die "Failed to install packages"
+}
 
-# Update package databases
-log_info "Updating package databases..."
-if sudo pacman -Syy --noconfirm; then
-  log_info "Package databases updated"
-else
-  log_error "Failed to update package databases"
-  exit 1
-fi
+install_snap() {
+  for pkg in "$@"; do
+    sudo snap install "$pkg" || die "Failed to install snap: $pkg"
+  done
+}
 
-# Install packages
-log_info "Installing packages..."
-if sudo pacman -S --noconfirm --needed {{- range $package := .linux_arch.packages }} {{ $package | quote }}{{- end }}; then
-  log_info "All packages installed successfully"
-else
-  log_error "Failed to install some packages"
-  exit 1
-fi
+set -e
 
-{{- else if eq .osid "linux_manjaro" }}
-log_info "Installing packages for Manjaro Linux..."
+osid={{ $osid | quote }}
+graphical={{ .graphical | quote }}
+pkgs=({{ range $pkgs }}{{ . | quote }} {{ end }})
+aur=({{ range $aur }}{{ . | quote }} {{ end }})
+snaps=({{ range $snaps }}{{ . | quote }} {{ end }})
 
-# Check if pacman is available
-if ! command -v pacman >/dev/null 2>&1; then
-  log_error "pacman not found, but osid is linux_manjaro"
-  exit 1
-fi
+log_info "Detected OS: $osid"
+log_info "Graphical: $graphical"
 
-# Update package databases
-log_info "Updating package databases..."
-if sudo pacman -Syy --noconfirm; then
-  log_info "Package databases updated"
-else
-  log_error "Failed to update package databases"
-  exit 1
-fi
+case "$osid" in
+  linux_arch|linux_cachyos)
+    (( ${#pkgs[@]} )) && { log_info "Installing Arch packages..."; install_pacman "${pkgs[@]}"; }
+    (( ${#aur[@]} )) && { log_info "Installing AUR packages..."; install_aur "${aur[@]}"; }
+    ;;
+  linux_debian)
+    (( ${#pkgs[@]} )) && { log_info "Installing Debian packages..."; install_apt "${pkgs[@]}"; }
+    ;;
+  linux_ubuntu)
+    (( ${#pkgs[@]} )) && { log_info "Installing Ubuntu packages..."; install_apt "${pkgs[@]}"; }
+    (( ${#snaps[@]} )) && { log_info "Installing snap packages..."; install_snap "${snaps[@]}"; }
+    ;;
+  *)
+    die "Unsupported OS: $osid (supported: linux_arch, linux_cachyos, linux_debian, linux_ubuntu)"
+    ;;
+esac
 
-# Install packages
-log_info "Installing packages..."
-if sudo pacman -S --noconfirm --needed {{- range $package := .linux_manjaro.packages }} {{ $package | quote }}{{- end }}; then
-  log_info "All packages installed successfully"
-else
-  log_error "Failed to install some packages"
-  exit 1
-fi
-
-{{- else if eq .osid "linux_debian" }}
-log_info "Installing packages for Debian..."
-
-# Check if apt-get is available
-if ! command -v apt-get >/dev/null 2>&1; then
-  log_error "apt-get not found, but osid is linux_debian"
-  exit 1
-fi
-
-# Update package lists
-log_info "Updating package lists..."
-if sudo apt-get update; then
-  log_info "Package lists updated"
-else
-  log_error "Failed to update package lists"
-  exit 1
-fi
-
-# Install packages
-log_info "Installing packages..."
-if sudo apt-get install -y {{- range $package := .linux_debian.packages }} {{ $package | quote }}{{- end }}; then
-  log_info "All packages installed successfully"
-else
-  log_error "Failed to install some packages"
-  exit 1
-fi
-
-{{- else if eq .osid "linux_ubuntu" }}
-log_info "Installing packages for Ubuntu..."
-
-# Check if apt-get is available
-if ! command -v apt-get >/dev/null 2>&1; then
-  log_error "apt-get not found, but osid is linux_ubuntu"
-  exit 1
-fi
-
-# Update package lists
-log_info "Updating package lists..."
-if sudo apt-get update; then
-  log_info "Package lists updated"
-else
-  log_error "Failed to update package lists"
-  exit 1
-fi
-
-# Install packages
-log_info "Installing packages..."
-if sudo apt-get install -y {{- range $package := .linux_ubuntu.packages }} {{ $package | quote }}{{- end }}; then
-  log_info "All packages installed successfully"
-else
-  log_error "Failed to install some packages"
-  exit 1
-fi
-
-{{- else }}
-log_error "Unsupported osid: {{ .osid }}"
-log_error "Supported: linux_arch, linux_manjaro, linux_debian, linux_ubuntu"
-exit 1
-{{- end }}
-
-log_info "Package installation completed successfully"
+log_info "Package installation complete"

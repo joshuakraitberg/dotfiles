@@ -2,29 +2,38 @@
 
 # private_dot_tmux.conf hash: {{ include "private_dot_tmux.conf" | sha256sum }}
 
+{{ template "logging.sh" }}
+
+gen_uuid() {
+  if command -v uuidgen >/dev/null 2>&1; then
+    uuidgen
+  else
+    echo "tmux-$(date +%s)-$RANDOM"
+  fi
+}
+
+tpm_sync() {
+  "$TPM_BIN/install_plugins"
+  "$TPM_BIN/update_plugins" all
+  "$TPM_BIN/clean_plugins"
+}
+
 set -e
 
-# Install TPM if needed
-[ -d ~/.tmux/plugins/tpm ] ||
-  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+TPM_DIR="$HOME/.tmux/plugins/tpm"
+TPM_BIN="$TPM_DIR/bin"
+
+[ -d "$TPM_DIR" ] || git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
 
 if [ -n "$TMUX" ]; then
-  ~/.tmux/plugins/tpm/bin/install_plugins
-  ~/.tmux/plugins/tpm/bin/update_plugins all
-  ~/.tmux/plugins/tpm/bin/clean_plugins
+  tpm_sync
 else
-  gen_uuid() {
-    if command -v uuidgen >/dev/null 2>&1; then
-      uuidgen
-    else
-      echo "tmux-$(date +%s)-$RANDOM"
-    fi
-  }
-
   session="$(gen_uuid)"
   TMUX='' tmux new-session -d -s "$session"
   TMUX='' tmux send-keys -t "$session" \
-    "$HOME/.tmux/plugins/tpm/bin/install_plugins && $HOME/.tmux/plugins/tpm/bin/update_plugins all && $HOME/.tmux/plugins/tpm/bin/clean_plugins; tmux wait-for -S $session" Enter
+    "$TPM_BIN/install_plugins && $TPM_BIN/update_plugins all && $TPM_BIN/clean_plugins; tmux wait-for -S $session" Enter
   TMUX='' tmux wait-for "$session"
   TMUX='' tmux kill-session -t "$session"
 fi
+
+log_info "Tmux plugins synced"

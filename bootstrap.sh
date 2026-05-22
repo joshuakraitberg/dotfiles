@@ -2,50 +2,41 @@
 
 set -e
 
-DOTFILES_REPO="github.com/joshuakraitberg/dotfiles"
+DOTFILES_REPO_ROOT="joshuakraitberg/dotfiles"
+DOTFILES_REPO="https://github.com/${DOTFILES_REPO_ROOT}.git"
+DOTFILES_REPO_SSH="git@github.com:${DOTFILES_REPO_ROOT}.git"
 
 command_exists() {
   command -v "$1" >/dev/null 2>&1
 }
 
-# Check prerequisites
-for cmd in curl git; do
-  if ! command_exists "$cmd"; then
-    echo "Error: $cmd not found. Please install it and try again."
-    exit 1
+install_chezmoi() {
+  if command_exists pacman; then
+    sudo pacman -S --noconfirm chezmoi
+  else
+    (cd /tmp && sh -c "$(curl -fsLS get.chezmoi.io)" && sudo mv bin/chezmoi /usr/local/bin/)
   fi
+}
+
+for cmd in curl git; do
+  command_exists "$cmd" || {
+    echo "Error: $cmd not found"
+    exit 1
+  }
 done
 
-# Install chezmoi if needed
-if ! command_exists chezmoi; then
+command_exists chezmoi || {
   echo "Installing chezmoi..."
+  install_chezmoi
+}
 
-  # Detect package manager
-  if command_exists pacman; then
-    pm="pacman"
-  elif command_exists apt-get; then
-    pm="apt"
-  else
-    pm=""
-  fi
+cd "$(dirname "$0")"
 
-  case "$pm" in
-    pacman)
-      sudo pacman -S --noconfirm chezmoi
-      ;;
-    apt)
-      (cd /tmp && sh -c "$(curl -fsLS get.chezmoi.io)" && sudo mv bin/chezmoi /usr/local/bin/)
-      ;;
-    *)
-      echo "Error: Unknown package manager. Install chezmoi manually: https://www.chezmoi.io/install/"
-      exit 1
-      ;;
-  esac
-fi
-
-# Initialize and apply
-if [ ! -e ~/.config/chezmoi/chezmoi.yaml ]; then
-  echo "Initializing chezmoi..."
+echo "Initializing chezmoi..."
+_origin="$(git remote get-url origin 2>/dev/null || true)"
+if [ "$_origin" = "$DOTFILES_REPO" ] || [ "$_origin" = "$DOTFILES_REPO_SSH" ]; then
+  chezmoi init -v
+else
   chezmoi init "${DOTFILES_REPO}" -v
 fi
 

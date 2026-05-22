@@ -1,7 +1,11 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-# private_dot_config/private_fish/fish_plugins hash: {{ include "private_dot_config/private_fish/fish_plugins" | sha256sum }}
+# private_dot_config/fish/fish_plugins hash: {{ include "private_dot_config/fish/fish_plugins" | sha256sum }}
+
+{{ template "logging.sh" }}
 
 set -e
 
+log_info "Updating fish plugins..."
 fish -c 'fisher update'
+log_info "Fish plugins updated"

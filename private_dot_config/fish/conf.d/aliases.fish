@@ -29,7 +29,7 @@ alias fgrep='fgrep --color=auto'
 # vim
 alias v='nvim'
 alias vim='nvim'
-alias svim='sudo -E $(which nvim) '
+alias svim='sudo -E XDG_CACHE_HOME=/root/.cache XDG_STATE_HOME=/root/.local/state XDG_DATA_HOME=/root/.local/share $(which nvim)'
 
 # tmux
 alias bye='tmux detach'

@@ -11,3 +11,8 @@ log_error() {
 log_warn() {
   echo "[WARN] $*"
 }
+
+die() {
+  log_error "$*"
+  exit 1
+}

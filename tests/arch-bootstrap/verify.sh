@@ -3,10 +3,10 @@
 set -e
 
 chezmoi init --source ~/.local/share/chezmoi \
-  --promptString merge_tool=vimdiff \
-  --promptString git_name="Test User" \
-  --promptString git_email="test@example.com" \
-  --promptString git_signing_key=""
+  --promptString "merge_tool=vimdiff" \
+  --promptString "Git name=Test User" \
+  --promptString "Git email=test@example.com" \
+  --promptString "Git signing key="
 
 ~/.local/share/chezmoi/bootstrap.sh
 
@@ -28,7 +28,10 @@ check() {
 echo "==> Packages"
 while IFS= read -r pkg; do
   check "$pkg" "sudo pacman -Q $pkg"
-done < <(chezmoi execute-template '{{ range .linux_arch.packages }}{{ . }}{{ "\n" }}{{ end }}')
+done < <(chezmoi execute-template '
+{{- $pkgs := .linux_arch.all.packages -}}
+{{- if .graphical -}}{{- $pkgs = concat $pkgs .linux_arch.graphical.packages -}}{{- end -}}
+{{ range $pkgs }}{{ . }}{{ "\n" }}{{ end }}')
 
 echo "==> Config files"
 while IFS= read -r file; do
