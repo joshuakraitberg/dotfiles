@@ -2,6 +2,8 @@
 
 set -e
 
+cd "$(dirname "$0")"
+
 DOTFILES_REPO_ROOT="joshuakraitberg/dotfiles"
 DOTFILES_REPO="https://github.com/${DOTFILES_REPO_ROOT}.git"
 DOTFILES_REPO_SSH="git@github.com:${DOTFILES_REPO_ROOT}.git"
@@ -12,9 +14,13 @@ command_exists() {
 
 install_chezmoi() {
   if command_exists pacman; then
+    install_chezmoi
     sudo pacman -S --noconfirm chezmoi
   else
-    (cd /tmp && sh -c "$(curl -fsLS get.chezmoi.io)" && sudo mv bin/chezmoi /usr/local/bin/)
+    tempdir=$(mktemp -d)
+    trap 'rm -rf "$tempdir"' EXIT
+    cp ./get-chezmoi.sh "$tempdir"
+    (cd "$tempdir" && ./get-chezmoi.sh && sudo mv bin/chezmoi /usr/local/bin/)
   fi
 }
 
@@ -29,8 +35,6 @@ command_exists chezmoi || {
   echo "Installing chezmoi..."
   install_chezmoi
 }
-
-cd "$(dirname "$0")"
 
 echo "Initializing chezmoi..."
 _origin="$(git remote get-url origin 2>/dev/null || true)"

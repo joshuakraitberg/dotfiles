@@ -6,6 +6,7 @@ tests/
 bootstrap.sh
 todo/
 bin/
+get-chezmoi.sh
 
 # This file is dynamic
 .config/fish/fish_variables
