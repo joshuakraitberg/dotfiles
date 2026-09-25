@@ -61,3 +61,10 @@ alias cza='chezmoi apply -v'
 alias czu='chezmoi update -v'
 alias czd='chezmoi diff'
 alias czm='chezmoi merge-all'
+alias czi='chezmoi init'
+
+# Vid
+function mpva
+    set -q argv[1]; or set argv[1] "."
+    find $argv[1] -type f -print0 | sort | xargs -0 mpv
+end
