@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# fonts hash: {{ range (glob (joinPath .chezmoi.sourceDir "private_dot_local/share/fonts/m/*.otf")) }}{{ include . | sha256sum }}{{ end }}
+
+{{ template "logging.sh" }}
+
+set -e
+
+command -v fc-cache >/dev/null 2>&1 || {
+  log_warn "fc-cache not found, skipping font cache refresh"
+  exit 0
+}
+
+fc-cache -f "$HOME/.local/share/fonts"
+
+log_info "Font cache refreshed"
