@@ -19,15 +19,15 @@ if status is-interactive
         set -xg SUDO_ASKPASS (command -v ksshaskpass)
     end
 
+    # Add bins
+    fish_add_path -m $HOME/.cargo/bin
+    fish_add_path -a $HOME/.bun/bin
+
     # Activate atuin (filter out deprecated bind -k syntax)
     atuin init fish | string replace -r '^\s*bind -M insert -k up.*$' '' | source
 
     # Activate zoxide
     zoxide init fish | source
-
-    # Add bins
-    fish_add_path -m $HOME/.cargo/bin
-    fish_add_path -a $HOME/.bun/bin
 
     # Reload aliases
     source ~/.config/fish/conf.d/aliases.fish

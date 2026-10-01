@@ -6,7 +6,7 @@ alias mkroot='chown root:root'
 
 # configs
 alias vv='vim ~/.config/nvim/lua/config/lazy.lua'
-alias tt='vim ~/.tmux.conf'
+alias tt='vim ~/.config/zellij/config.kdl'
 alias zz="vim ~/.config/fish/config.fish"
 alias aa="vim ~/.config/fish/conf.d/aliases.fish"
 alias zp="vim ~/.zprofile"
@@ -30,23 +30,6 @@ alias fgrep='fgrep --color=auto'
 alias v='nvim'
 alias vim='nvim'
 alias svim='sudo -E XDG_CACHE_HOME=/root/.cache XDG_STATE_HOME=/root/.local/state XDG_DATA_HOME=/root/.local/share $(which nvim)'
-
-# tmux
-alias bye='tmux detach'
-
-function tst
-    if command -v tmux >/dev/null 2>&1 && status is-interactive && not string match -q "*screen*" "$TERM" && not string match -q "*tmux*" "$TERM" && [ -z "$TMUX" ]
-        tmux new-session -A -s main
-    end
-end
-
-function tsnt
-    if command -v tmux >/dev/null 2>&1 && status is-interactive && not string match -q "*screen*" "$TERM" && not string match -q "*tmux*" "$TERM" && [ -z "$TMUX" ]
-        if not tmux has-session -t main 2>/dev/null
-            exec tmux new-session -s main
-        end
-    end
-end
 
 # kubernetes
 if which kubecolor &>/dev/null

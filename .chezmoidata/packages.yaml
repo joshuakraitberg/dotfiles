@@ -1,19 +1,30 @@
 ---
+cargo:
+  all:
+    - atuin
+    - bat
+    - cargo-update
+    - du-dust
+    - eza
+    - fd-find
+    - gitui
+    - just
+    - xh
+    - zellij
+    - zoxide
+  graphical: []
+
 linux_arch:
   all:
     packages:
-      - atuin
       - base-devel
       - bun
       - diff-so-fancy
-      - eza
-      - fd
       - fish
       - fisher
       - fzf
       - git
       - jq
-      - just
       - less
       - neovim
       - npm
@@ -21,11 +32,8 @@ linux_arch:
       - prettier
       - ripgrep
       - shfmt
-      - tmux
       - uv
-      - xh
       - yq
-      - zoxide
     aur: []
   graphical:
     packages:
@@ -36,13 +44,11 @@ linux_arch:
 linux_debian:
   all:
     packages:
+      - build-essential
       - fish
-      - fd-find
       - fzf
       - git
       - ripgrep
-      - tmux
-      - uuid-runtime
       - zsh
   graphical:
     packages: []
@@ -50,13 +56,11 @@ linux_debian:
 linux_ubuntu:
   all:
     packages:
+      - build-essential
       - fish
-      - fd-find
       - fzf
       - git
       - ripgrep
-      - tmux
-      - uuid-runtime
       - zsh
     snap: []
   graphical:

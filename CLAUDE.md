@@ -28,11 +28,15 @@ Cross-distro dotfiles managed with chezmoi.
 - Guard array installs:
   `(( ${#arr[@]} )) && { log_info "..."; install_fn "${arr[@]}"; }`
 - Functions named `install_<manager>` (e.g. `install_pacman`, `install_aur`,
-  `install_apt`, `install_snap`)
+  `install_apt`, `install_snap`, `install_cargo`)
 
 ## packages.yaml structure
 
 ```yaml
+cargo: # cross-OS, `cargo binstall --locked`, runs after apply
+  all: [...]
+  graphical: [...]
+
 linux_<os>:
   all:
     packages: [...] # native package manager
@@ -57,5 +61,5 @@ just test        # build + run (cached pacman volume)
 just test-clean  # force full rebuild
 ```
 
-`verify.sh` calls `bootstrap.sh` then checks packages, managed files, tmux
-plugins, and fish plugins.
+`verify.sh` calls `bootstrap.sh` then checks packages, cargo packages, managed
+files, and fish plugins.

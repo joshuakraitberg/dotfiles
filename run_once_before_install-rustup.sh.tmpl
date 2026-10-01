@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+{{ template "logging.sh" }}
+
+set -e
+
+if command -v rustup >/dev/null 2>&1 || [ -x "$HOME/.cargo/bin/rustup" ]; then
+  log_info "rustup already installed, skipping"
+  exit 0
+fi
+
+command -v curl >/dev/null 2>&1 || die "curl not found, cannot install rustup"
+
+log_info "Installing rustup..."
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y -q --no-modify-path ||
+  die "Failed to install rustup"
+log_info "rustup installed"

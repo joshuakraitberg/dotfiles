@@ -33,16 +33,18 @@ done < <(chezmoi execute-template '
 {{- if .graphical -}}{{- $pkgs = concat $pkgs .linux_arch.graphical.packages -}}{{- end -}}
 {{ range $pkgs }}{{ . }}{{ "\n" }}{{ end }}')
 
+echo "==> Cargo packages"
+while IFS= read -r crate; do
+  check "$crate" "$HOME/.cargo/bin/cargo install --list | grep -q '^$crate '"
+done < <(chezmoi execute-template '
+{{- $crates := .cargo.all -}}
+{{- if .graphical -}}{{- $crates = concat $crates .cargo.graphical -}}{{- end -}}
+{{ range $crates }}{{ . }}{{ "\n" }}{{ end }}')
+
 echo "==> Config files"
 while IFS= read -r file; do
   check "$file" "test -e ~/$file"
 done < <(chezmoi managed --include=files)
-
-echo "==> Tmux plugins"
-while IFS= read -r plugin; do
-  name="${plugin##*/}"
-  check "$name" "test -d ~/.tmux/plugins/$name"
-done < <(grep "^set -g @plugin" ~/.tmux.conf | grep -oP "(?<=')[^/]+/[^']+" | grep -v "^github_username")
 
 echo "==> Fish plugins"
 while IFS= read -r plugin; do

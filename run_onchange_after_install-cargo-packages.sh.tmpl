@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# cargo packages hash: {{ .cargo | toJson | sha256sum }}
+
+{{- $crates := .cargo.all }}
+{{- if .graphical }}
+{{-   $crates = concat $crates .cargo.graphical }}
+{{- end }}
+
+{{ template "logging.sh" }}
+
+install_cargo_binstall() {
+  curl --proto '=https' --tlsv1.2 -sSfL \
+    https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh |
+    bash || die "Failed to install cargo-binstall"
+}
+
+install_cargo() {
+  cargo binstall -y --locked "$@" || die "Failed to install cargo packages"
+}
+
+set -e
+
+crates=({{ range $crates }}{{ . | quote }} {{ end }})
+
+export PATH="$HOME/.cargo/bin:$PATH"
+command -v cargo >/dev/null 2>&1 || die "cargo not found, is rustup installed?"
+
+command -v cargo-binstall >/dev/null 2>&1 || {
+  log_info "Installing cargo-binstall..."
+  install_cargo_binstall
+}
+
+(( ${#crates[@]} )) && { log_info "Installing cargo packages..."; install_cargo "${crates[@]}"; }
+
+log_info "Cargo package installation complete"

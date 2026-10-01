@@ -11,7 +11,7 @@ update:
     chezmoi update -v
 
 test:
-    docker buildx build -f tests/arch-bootstrap/Dockerfile -t dotfiles-test:arch-bootstrap .
+    docker buildx build --pull -f tests/arch-bootstrap/Dockerfile -t dotfiles-test:arch-bootstrap .
     docker run --rm -t \
         --init \
         -e TERM=dumb \
@@ -20,7 +20,7 @@ test:
         dotfiles-test:arch-bootstrap
 
 test-clean:
-    docker buildx build --no-cache -f tests/arch-bootstrap/Dockerfile -t dotfiles-test:arch-bootstrap .
+    docker buildx build --pull --no-cache -f tests/arch-bootstrap/Dockerfile -t dotfiles-test:arch-bootstrap .
     docker run --rm -t \
         --init \
         -e TERM=dumb \

@@ -13,7 +13,7 @@ alias sdn='sudo shutdown -h now'
 alias srn='sudo reboot'
 alias hg='history 0 | grep --color=auto'
 alias vv='vim ~/.config/nvim/lua/config/lazy.lua'
-alias tt='vim ~/.tmux.conf'
+alias tt='vim ~/.config/zellij/config.kdl'
 alias zz="vim ~/.zshrc"
 alias zp="vim ~/.zprofile"
 alias rr="source ~/.zprofile"
@@ -68,10 +68,6 @@ popv() {
   pyenv virtualenv-delete "$NAME"
   rm .python-version
 }
-
-# tmux
-alias bye='tmux detach'
-alias tst='if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then; tmux new-session -A -s main; else; echo "Already using TMUX"; (exit 1); fi'
 
 # File ops
 alias cp='cp -iv'
