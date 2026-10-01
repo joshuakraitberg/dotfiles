@@ -7,8 +7,8 @@ if status is-interactive
     set -U fish_greeting ""
 
     # Stuff
-    set -xg VISUAL nvim
-    set -xg EDITOR nvim
+    set -xg VISUAL (command -v nvim)
+    set -xg EDITOR (command -v nvim)
 
     # Set SUDO_ASKPASS: zenity by default, fall back to ksshaskpass
     if set -q SUDO_ASKPASS
@@ -19,14 +19,15 @@ if status is-interactive
         set -xg SUDO_ASKPASS (command -v ksshaskpass)
     end
 
-    # Activate bun
-    fish_add_path ~/.bun/bin
-
     # Activate atuin (filter out deprecated bind -k syntax)
     atuin init fish | string replace -r '^\s*bind -M insert -k up.*$' '' | source
 
     # Activate zoxide
     zoxide init fish | source
+
+    # Add bins
+    fish_add_path -m $HOME/.cargo/bin
+    fish_add_path -a $HOME/.bun/bin
 
     # Reload aliases
     source ~/.config/fish/conf.d/aliases.fish

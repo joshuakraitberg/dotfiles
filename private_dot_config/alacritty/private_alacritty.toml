@@ -49,8 +49,8 @@ size = 10.0
 family = "Monaspace Neon NF"
 
 [terminal.shell]
-args = ["--login", "-C", "tsnt"]
-program = "/bin/fish"
+program = "/usr/bin/sh"
+args = ["-c", "bin=$(command -v zellij || echo ~/.cargo/bin/zellij) && $bin attach --index 0 --create"]
 
 [window.dimensions]
 columns = 152
